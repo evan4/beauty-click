@@ -32,6 +32,37 @@
                 </label>
             </div>
 
+            <div class="block mt-4 clearfix">
+                <p>Вход через соц. сети</p>
+                <ul class="socials">
+                    <li>
+                        <a href="/login/facebook">
+                            <i class="fab fa-facebook-f" ></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/login/vkontakte">
+                            <i class="fab fa-vk"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/login/odnoklassniki">
+                            <i class="fab fa-odnoklassniki"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/login/google">
+                            <i class="fab fa-google"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/login/yandex">
+                            <i class="fab fa-yandex"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">

@@ -19,30 +19,24 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $credentials = request(['limit', 'offset', 'sortBy', 'sortDesc']);
+        $credentials = request([ 'page', 'sortBy', 'sortDesc']);
         
-        $limit = (int) $credentials['limit'];
-        $offset = (int) $credentials['offset'];
         $orderBy = $credentials['sortBy'];
         $sortDesc = (bool) $credentials['sortDesc'] ? 'asc' : 'desc';
         
         $users = User::where('id', '!=', auth()->user()->id)
             ->orderBy($orderBy, $sortDesc)
-            ->limit($limit)
-            ->offset($offset)
-            ->get();
-            
+            ->paginate(10);
 
         foreach ($users as $user) {
-            $user->getRoleNames()[0];
+            
+            $user->getRoleNames();
+            
         }
-
-        $usersCount = User::count();
-
+        
         return response()->json([
             'success' => true,
             'users' => $users,
-            'usersCount' => $usersCount
         ], Response::HTTP_OK);
     }
 
@@ -66,7 +60,7 @@ class UsersController extends Controller
             'password' => Hash::make($input['password']),
         ]);
         
-        $role = Role::where('id', (int) $input['role']);
+        //$role = Role::where('id', (int) $input['role']);
         $user->assignRole($role);
 
         if($user){
