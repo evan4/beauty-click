@@ -28,3 +28,6 @@ npm run watch-poll
 ```
 npm run production
 ```
+
+### Шаблон blade админ панели
+/vendor/laravel/jetstream/resources/views/components/welcome.blade.php
