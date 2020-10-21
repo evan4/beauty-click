@@ -21,7 +21,8 @@
         "socialiteproviders/odnoklassniki": "^1.0",
         "socialiteproviders/vkontakte": "^4.1",
         "socialiteproviders/yandex": "^3.1",
-        "spatie/laravel-permission": "^3.17"
+        "spatie/laravel-permission": "^3.17",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
