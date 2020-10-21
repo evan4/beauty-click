@@ -24,7 +24,7 @@ npm install
 npm run watch-poll
 ```
 
-### Однократный запуск компилятора.для production
+### Однократный запуск компилятора для production
 ```
 npm run production
 ```

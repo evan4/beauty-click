@@ -37,6 +37,9 @@ export default new Vuex.Store( {
   actions: {
     openAlert({ commit}, payload) {
       commit('openAlert', payload);
+      setTimeout(() => {
+        commit('closeAlert');
+      }, 3000);
     },
     closeAlert({ commit}){
       commit('closeAlert');

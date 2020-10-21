@@ -18,6 +18,9 @@ export default {
     },
     methods: {
       
+      closeAlert(){
+        this.$store.dispatch( 'closeAlert')
+      }
     }
 }
 </script>

@@ -88,26 +88,7 @@ export default {
   },
   methods: {
     deleteUser(id){
-      this.$store.dispatch( 'users/deleteuser', id ).then(
-        result => {
-          // первая функция-обработчик - запустится при вызове resolve
-          this.$store.dispatch( 'users/getUsers', {
-            offset: this.getOffset(this.currentPage, this.sortDesc),
-            sortDesc: this.sortDesc,
-            sortBy: this.sortBy
-          });
-          this.$store.dispatch( 'openAlert', {
-            alertType : 'success',
-            alertMsg : 'Пользователь успешно удален'
-          });
-        },
-        error => {
-           this.$store.dispatch( 'openAlert', {
-            alertType : 'danger',
-            alertMsg : 'Произошла ошибка. Попробуйте еще раз'
-          });
-        }
-      );
+      this.$store.dispatch( 'users/deleteuser', id )
     },
     closeAlert(){
       this.$store.dispatch( 'closeAlert')

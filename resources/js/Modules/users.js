@@ -35,16 +35,14 @@ const users = {
       state.usersCount = +users.total;
 
     },
-    deleteuser(state, payload) {
-
-    }
   },
   actions: {
     // получение списка пользователей
     getUsers({ commit, state }, payload) {
       let {page, sortDesc, sortBy} = payload;
 
-      Vue.http.get(`users`, { 
+      Vue.http.get(`users`, {
+        cache: false,
         params: {
           page,
           sortDesc,
@@ -58,13 +56,16 @@ const users = {
           console.log(response);
           commit('getUsers', response);
         }, response => {
-          // error callback
+          dispatch('openAlert',{
+            alertType : 'danger',
+            alertMsg : 'Произошла ошибка. Попробуйте еще раз'
+          }, { root: true })
         });
     },
     createUser({ dispatch, commit, state }, payload) {
         const {name, email, password, role} = payload;
-
-        Vue.http.post(`users`, { 
+        
+         Vue.http.post('users', { 
           name, email, password, role
         })
           .then((response) => {
@@ -75,15 +76,18 @@ const users = {
             dispatch('openAlert',{
               alertType : 'success',
               alertMsg : 'Пользователь успешно создан'
-            })
+            }, { root: true })
             router.push( '/dashboard/users' );
           }, response => {
-            
+            dispatch('openAlert',{
+              alertType : 'danger',
+              alertMsg : 'Произошла ошибка. Попробуйте еще раз'
+            }, { root: true })
           });
     },
     checkEmailUniqueness({ commit, state }, payload) {
       return new Promise((resolve, reject) => {
-        Vue.http.post(`users/checkEmailUniqueness`, {email: payload})
+        Vue.http.post('users/checkEmailUniqueness', {email: payload})
         .then((response) => {
           return response.json();
         })
@@ -94,8 +98,7 @@ const users = {
         });
       })
     },
-    deleteuser({ commit, state }, payload) {
-      return new Promise((resolve, reject) => {
+    deleteuser({ dispatch, commit, state }, payload) {
         const userId = !Number.isNaN(Number(payload)) ? +payload : null;
 
         if (userId) {
@@ -105,16 +108,24 @@ const users = {
             })
             .then(response => {
               if(response.success){
-                resolve(response.success)
+                dispatch( 'openAlert', {
+                  alertType : 'success',
+                  alertMsg : 'Пользователь успешно удален'
+                }, { root: true });
               }else{
-                reject()
+                dispatch('openAlert',{
+                  alertType : 'danger',
+                  alertMsg : 'Произошла ошибка. Попробуйте еще раз'
+                }, { root: true })
               }
               
             }, response => {
-              reject()
+              dispatch('openAlert',{
+                alertType : 'danger',
+                alertMsg : 'Произошла ошибка. Попробуйте еще раз'
+              }, { root: true })
             });
         }
-      })
     }
   },
 };

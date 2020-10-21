@@ -6,9 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -48,20 +50,29 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($input, [
+        $input = $request->toArray();
+
+        $validator = Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => $this->passwordRules(),
-        ])->validate();
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->all()
+            ], Response::HTTP_OK);
+        }
 
         $user =  User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'email_verified_at' => now()
         ]);
         
-        //$role = Role::where('id', (int) $input['role']);
-        $user->assignRole($role);
+        $user->assignRole($input['role']);
 
         if($user){
             return response()->json([

@@ -8,7 +8,7 @@
       @input="closeAlert"
     >{{alertMsg}}</b-alert>
 
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       
       <b-form-group id="input-group-2" label="Имя:" label-for="input-name">
         <b-form-input
@@ -31,6 +31,7 @@
           type="email"
           @keyup="checkUniqueEmail"
           :disabled="disableEmailField"
+          ref="email"
           required
           placeholder="email"
         ></b-form-input>
@@ -54,7 +55,7 @@
       <b-form-group id="input-group-3" label="Роль" label-for="input-3">
         <b-form-select
           id="input-3"
-          v-model="formData.roles"
+          v-model="formData.role"
           :options="roles"
           required
         ></b-form-select>
@@ -81,7 +82,7 @@ export default {
           email: '',
           name: '',
           password: '',
-          roles: 'клиент',
+          role: 'клиент',
         },
         roles: [ 'клиент', 'продавец' ],
       }
@@ -112,17 +113,8 @@ export default {
               }else{
                 this.uniqueEmail = false;
               }
-              // первая функция-обработчик - запустится при вызове resolve
-            /*   this.$store.dispatch( 'users/getUsers', {
-                offset: this.getOffset(this.currentPage, this.sortDesc),
-                sortDesc: this.sortDesc,
-                sortBy: this.sortBy
-              });
-              this.$store.dispatch( 'openAlert', {
-                alertType : 'success',
-                alertMsg : 'Пользователь успешно удален'
-              }); */
               this.disableEmailField = false;
+              this.$refs.email.focus()
             },
             error => {
               this.$store.dispatch( 'openAlert', {
@@ -130,15 +122,18 @@ export default {
                 alertMsg : 'Произошла ошибка. Попробуйте еще раз'
               });
               this.disableEmailField = false;
+              
             }
           );
+          
+        }else{
+          this.uniqueEmail = false;
         }
         //
       },
       onSubmit(evt) {
-        evt.preventDefault()
-        alert(JSON.stringify(this.formData))
-        this.$store.dispatch( 'users', ['createUser'], this.formData)
+
+        console.log(this.formData);
 
         if ( !this.formData.name ) {
 
@@ -162,25 +157,10 @@ export default {
         }
 
         if ( !this.errors.length ) {
-          console.log('done');
-          //this.$store.dispatch( 'admin/singup', this.formData );
+          
+          this.$store.dispatch( 'users/createUser', this.formData)
 
         }
-       /*  this.$store.dispatch( 'openAlert', {
-            alertType : 'success',
-            alertMsg : 'Пользователь успешно удален'
-          });
-        this.$store.dispatch( 'openAlert', {
-          alertType : 'danger',
-          alertMsg : 'Произошла ошибка. Попробуйте еще раз'
-        }); */
-      },
-      onReset(evt) {
-        evt.preventDefault()
-        // Reset our form values
-        this.formData.email = ''
-        this.formData.name = ''
-        this.formData.role = null
       },
       closeAlert(){
         this.$store.dispatch( 'closeAlert')
@@ -189,12 +169,11 @@ export default {
     destroyed() {
 
       this.errors = [];
-      this.form = {
+      this.formData = {
         name: '',
         email: '',
         password: '',
       };
-      //this.$store.commit( 'admin/authFailed', 'reset' );
 
     },
 }
