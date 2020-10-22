@@ -22,9 +22,8 @@ const users = {
     perPage(state) {
       return state.limit;
     },
-    currentuser(state){
-      const id = +this.$route.query.id;
-      return state.users.map(user => user.id === id);
+    currentuser: state => id => {
+      return state.users.find(user => user.id === id);
     }
   },
   mutations: {
@@ -84,6 +83,29 @@ const users = {
               alertMsg : 'Произошла ошибка. Попробуйте еще раз'
             }, { root: true })
           });
+    },
+    updateUser({ dispatch, commit, state }, payload) {
+      const {id, name, email, password, role} = payload;
+      
+       Vue.http.patch(`users/${id}`, { 
+        name, email, password, role
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then(response => {
+          console.log(response);
+          dispatch('openAlert',{
+            alertType : 'success',
+            alertMsg : 'Данные пользователя успешно обновлены'
+          }, { root: true })
+          router.push( '/dashboard/users' );
+        }, response => {
+          dispatch('openAlert',{
+            alertType : 'danger',
+            alertMsg : 'Произошла ошибка. Попробуйте еще раз'
+          }, { root: true })
+        });
     },
     checkEmailUniqueness({ commit, state }, payload) {
       return new Promise((resolve, reject) => {

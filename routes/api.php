@@ -23,9 +23,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/backend/login', [BackendController::class, 'login']);
 Route::post('/backend/checkToken', [BackendController::class, 'checkToken']);
 
-Route::apiResource('/backend/users', UsersController::class)
-->middleware(['auth:api', 'role:super-admin']);
 
-Route::post('/backend/users/checkEmailUniqueness', 
-  [UsersController::class, 'checkEmailUniqueness'])
-  ->middleware(['auth:api', 'role:super-admin']);
+Route::middleware(['auth:api', 'role:super-admin'])->prefix('backend')->group(function () {
+
+  Route::post('users/checkEmailUniqueness', 
+    [UsersController::class, 'checkEmailUniqueness']);
+
+  Route::get('users', [UsersController::class, 'index']);
+  Route::post('users', [UsersController::class, 'store']);
+  Route::get('users/{user}', [UsersController::class, 'show']);
+  Route::patch('users/{user}', [UsersController::class, 'update']);
+  Route::delete('users/{user}', [UsersController::class, 'destroy']);
+
+
+
+});

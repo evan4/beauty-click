@@ -63,6 +63,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     ];
 
      /**
+     * Get the services for the user.
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed

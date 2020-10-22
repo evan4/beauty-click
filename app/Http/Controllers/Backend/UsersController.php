@@ -102,17 +102,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -121,7 +110,52 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $input = $request->toArray();
+       
+        $validateArray = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ];
+
+        $data = [
+            'name' => $input['name'],
+            'email' => $input['email']
+        ];
+
+        if($input['password']){
+            array_push($data, ['password' => $input['password']]);
+            array_push($validateArray, ['password' => ['required', 'string', 'min:8']]);
+        }
+
+        $validator = Validator::make($data, $validateArray);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->all()
+            ], Response::HTTP_OK);
+        }
+
+        if($input['password']){
+            $data['password'] = Hash::make($input('password'));
+        }else{
+            unset($data['password']);
+        }
+
+       if(!$user->hasRole($input['role'])){
+            $user->removeRole($user->getRoleNames()[0]);
+            $user->assignRole($input['role']);
+       }
+       
+        if($user){
+            return response()->json([
+                'success' => true,
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success' => false,
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -165,7 +199,7 @@ class UsersController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function sanitizeEmail($email)
+    private function sanitizeEmail($email)
     {
         $filteredEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
         

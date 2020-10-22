@@ -9,6 +9,7 @@ use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory;
 use App\Models\User;
+
 class PermissionsTableSeeder extends Seeder
 {
     private $providerPassword = 'secret12';
@@ -44,14 +45,14 @@ class PermissionsTableSeeder extends Seeder
             'password' => $password,
             'email_verified_at' => now()
         ]);
+        
         $user->assignRole($role1);
 
         for($i=1; $i < 51; $i++){
-            $name = $faker->firstName();
-
+            $name = $faker->unique()->firstName();
             $user = User::factory()->create([
                 'name' => $name,
-                'email' => $faker->unique()->email,
+                'email' => $name . '@gmail.com',
                 'password' => $password,
                 'email_verified_at' => now()
             ]);

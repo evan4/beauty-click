@@ -122,7 +122,7 @@ export default {
                 alertMsg : 'Произошла ошибка. Попробуйте еще раз'
               });
               this.disableEmailField = false;
-              
+
             }
           );
           
@@ -173,6 +173,7 @@ export default {
         name: '',
         email: '',
         password: '',
+        role: '',
       };
 
     },
