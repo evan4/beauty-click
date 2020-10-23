@@ -19,6 +19,7 @@ class CreateServicesTable extends Migration
             $table->string('slug');
             $table->text('description');
             $table->unsignedSmallInteger('price');
+            $table->string('img')->nullable();
             $table->timestamps();
 
             $table->foreignId('category_id')->constrained('categories')

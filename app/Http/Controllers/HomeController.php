@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Service;
 
 class HomeController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *
@@ -13,8 +16,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
-        $this->middleware('permission:edit users')->only('features');
+        /* $this->middleware('auth')->except('index');
+        $this->middleware('permission:edit users')->only('features'); */
     }
 
     /**
@@ -24,7 +27,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home.index');
+        $categories = Category::with('services')->orderBy('title')->get();
+        
+        return view('home.index', compact('categories'));
+    }
+
+    public function category(Category $category)
+    {
+        $services = Service::where('category_id', $category->id)->paginate();
+
+        return view('home.category', compact('services'));
+    }
+
+    public function service(Service $service)
+    {
+        return view('home.category', compact('service'));
+    }
+
+    public function order()
+    {
+        return view('home.order');
     }
 
     public function features()

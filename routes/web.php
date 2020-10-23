@@ -14,6 +14,7 @@ use App\Actions\Fortify\CreateNewUser;
 |
 */
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,9 +24,16 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-
-
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
+Route::get('/category/{category}', [HomeController::class, 'category']);
+Route::get('/category/{category}/{{service}}', [HomeController::class, 'service']);
+
+
+Route::get('/cart/order', [CartController::class, 'order']);
+Route::get('/cart/add', [CartController::class, 'add']);
+Route::get('/cart/remove', [CartController::class, 'remove']);
+Route::get('/cart/clear', [CartController::class, 'clear']);
 
 Route::get('/features', [HomeController::class, 'features']);
 

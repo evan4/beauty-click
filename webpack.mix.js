@@ -12,6 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    mix.js('resources/js/home.js', 'public/js')
     .js("resources/js/admin.js", "public/js")
     .sass('resources/assets/sass/home.scss', 'public/css')
     .options({

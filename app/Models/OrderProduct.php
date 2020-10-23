@@ -24,7 +24,7 @@ class OrderProduct extends Model
     */
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo('App\Models\Service');
     }
 
     /**
@@ -32,7 +32,7 @@ class OrderProduct extends Model
     */
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo('App\Models\Order');
     }
 
 }

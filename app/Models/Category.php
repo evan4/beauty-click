@@ -17,7 +17,6 @@ class Category extends Model
     protected $fillable = [
         'title',
         'description',
-        'price',
     ];
 
     /**
@@ -25,7 +24,7 @@ class Category extends Model
      */
     public function services()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany('App\Models\Service');
     }
 
     /**

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Controllers\Backend\UsersController;
+use App\Http\Controllers\CartController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,7 +19,6 @@ use App\Http\Controllers\Backend\UsersController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
 
 Route::post('/backend/login', [BackendController::class, 'login']);
 Route::post('/backend/checkToken', [BackendController::class, 'checkToken']);
