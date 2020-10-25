@@ -1,0 +1,1 @@
+[Sun Oct 25 19:00:43.610776 2020] [php7:error] [pid 14200] [client 127.0.0.1:33180] PHP Fatal error:  Cannot use empty array elements in arrays in /home/ivan/domains/beauty.local/app/Http/Controllers/CartController.php on line 52, referer: http://beauty.local/cart/order

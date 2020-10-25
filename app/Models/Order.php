@@ -28,4 +28,19 @@ class Order extends Model
         return $this->belongsTo('App\Models\User');
     }
     
+    /**
+     * Get the payment type that owns the order.
+     */
+    public function payment()
+    {
+        return $this->belongsTo('App\Models\Payment');
+    }
+
+    /**
+     * Get the shipping type that owns the order.
+     */
+    public function shipping()
+    {
+        return $this->belongsTo('App\Models\Shipping');
+    }
 }

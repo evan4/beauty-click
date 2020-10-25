@@ -108,7 +108,7 @@ export default {
           .then(
             result => {
               console.log(result);
-              if(result){
+              if(!result){
                 this.uniqueEmail = true;
               }else{
                 this.uniqueEmail = false;
@@ -117,6 +117,7 @@ export default {
               this.$refs.email.focus()
             },
             error => {
+              console.log(error);
               this.$store.dispatch( 'openAlert', {
                 alertType : 'danger',
                 alertMsg : 'Произошла ошибка. Попробуйте еще раз'

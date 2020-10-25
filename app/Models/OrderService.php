@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderProduct extends Model
+class OrderService extends Model
 {
     use HasFactory;
 
@@ -20,7 +20,7 @@ class OrderProduct extends Model
     ];
 
     /**
-     * Get the service that owns the orderProduct.
+     * Get the service that owns the OrderService.
     */
     public function service()
     {
@@ -28,7 +28,7 @@ class OrderProduct extends Model
     }
 
     /**
-     * Get the order that owns the orderProduct.
+     * Get the order that owns the OrderService.
     */
     public function order()
     {

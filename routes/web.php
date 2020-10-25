@@ -26,12 +26,15 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-Route::get('/category/{category}', [HomeController::class, 'category']);
-Route::get('/category/{category}/{{service}}', [HomeController::class, 'service']);
+Route::get('/catalog/{category}', [HomeController::class, 'category']);
+Route::get('/catalog/{category}/{{service}}', [HomeController::class, 'service']);
 
 
 Route::get('/cart/order', [CartController::class, 'order']);
+Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
+Route::get('/cart/thanks', [CartController::class, 'thanks']);
 Route::get('/cart/add', [CartController::class, 'add']);
+Route::get('/cart/change', [CartController::class, 'change']);
 Route::get('/cart/remove', [CartController::class, 'remove']);
 Route::get('/cart/clear', [CartController::class, 'clear']);
 

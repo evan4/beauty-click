@@ -12,9 +12,9 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-    <script src="js/jquery-2.2.2.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/home.js"></script>
+    <script src="/js/jquery-2.2.2.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/home.js"></script>
     @livewireStyles
 </head>
 
@@ -26,8 +26,7 @@
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
         <form class="form-inline">
             <div class="form-group mb-2">
-              <input type="search" readonly class="form-control-plaintext" 
-              id="search">
+              <input type="search" readonly class="form-control-plaintext" id="search">
             </div>
         </form>
         <div class="product_list_header">
@@ -36,7 +35,8 @@
         </div>
     </div>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        
+        <h5 class="my-0 mr-md-auto font-weight-normal"> <a href="/">Beauty click</a></h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="/features">Features</a>
             <a class="p-2 text-dark" href="#">Enterprise</a>
@@ -87,7 +87,8 @@
                         @foreach ($cart['services'] as $id => $item)
                         <tr>
                             <td>
-                                <img src="/images/{{$item['img'] ?? 'no_image.png' }}" alt="{{$item['title']}}" height="50">
+                                <img src="/images/{{$item['img'] ?? 'no_image.png' }}" 
+                                alt="{{$item['title']}}" height="50">
                             </td>
                             <td>{{$item['title']}}</td>
                             <td>{{$item['quantity']}}</td>

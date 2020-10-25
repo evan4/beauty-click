@@ -12,7 +12,7 @@
                         <figure>
                             <div class="snipcart-item block">
                                 <div class="snipcart-thumb">
-                                    <a href="/category/{{$service->category}}}/{{$service->service}}}">
+                                    <a href="/catalog/{{$service->category}}}/{{$service->service}}}">
                                         @if ($service->img)
                                         <img class="img-responsive" src="/images/{{$service->img}}" alt="{{$service->title}}"> 
                                         @else

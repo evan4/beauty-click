@@ -18,9 +18,17 @@ class CreateOrdersTable extends Migration
 
             $table->unsignedTinyInteger('status')->defaultValue(0);
             $table->unsignedSmallInteger('total');
-            $table->text('note');
+            $table->string('address');
+            $table->string('phone');
+            $table->text('note')->nullable();
             $table->timestamps();
 
+
+            $table->foreignId('shipping_id')->constrained('shippings')
+                ->onDelete('cascade');
+            $table->foreignId('payment_id')->constrained('payments')
+                ->onDelete('cascade');
+                
             $table->foreignId('user_id')->constrained('users')
                 ->onDelete('cascade');
         });

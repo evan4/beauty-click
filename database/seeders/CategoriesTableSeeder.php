@@ -34,8 +34,7 @@ class CategoriesTableSeeder extends Seeder
                 'title' => 'Биодобавки',
                 'slug' => 'biodobavki',
                 'description' => 'Биодобавки'
-            ],
-            
+            ]
         ]);
 
     }

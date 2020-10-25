@@ -25,23 +25,32 @@ class PermissionsTableSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
-        Permission::create(['name' => 'create users']);
+        Permission::create(['name' => 'edit services']);
+        Permission::create(['name' => 'delete services']);
+        Permission::create(['name' => 'create services']);
+        
+        Permission::create(['name' => 'create comments']);
+
 
         // create roles and assign existing permissions
         $role1 = Role::create(['name' => 'super-admin']);
+        
         // gets all permissions via Gate::before rule; see AuthServiceProvider
 
         $role2 = Role::create(['name' => 'клиент']);
+        $role2->givePermissionTo('create comments');
+        
 
         $role3 = Role::create(['name' => 'продавец']);
+        $role3->givePermissionTo('create services');
+        $role3->givePermissionTo('edit services');
+        $role3->givePermissionTo('delete services');
 
         $password = Hash::make($this->providerPassword);
         // create demo users
         $user = User::factory()->create([
             'name' => 'Ivan',
-            'email' => 'ivinn@mail.ru',
+            'email' => 'r6917-web@yahoo.com',
             'password' => $password,
             'email_verified_at' => now()
         ]);
@@ -52,7 +61,7 @@ class PermissionsTableSeeder extends Seeder
             $name = $faker->unique()->firstName();
             $user = User::factory()->create([
                 'name' => $name,
-                'email' => $name . '@gmail.com',
+                'email' => strtolower($name) . '@gmail.com',
                 'password' => $password,
                 'email_verified_at' => now()
             ]);

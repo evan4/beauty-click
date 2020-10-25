@@ -60,7 +60,31 @@ export const updateCartDialog = (cart) => {
             <td id="cart-sum">${total}</td>
           </tr>
     `;
-    $modal.find('.modal-body tbody').html(template);
+    
+    if($modal.find('.modal-body tbody').length){
+      $modal.find('.modal-body tbody').html(template);
+    }else{
+      template = `
+      <div class="table-responsive">
+       <table class="table table-hover table-striped">
+          <thead>
+          <tr>
+              <th>Фото</th>
+              <th>Наименование</th>
+              <th>Кол-во</th>
+              <th>Цена</th>
+              <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          ${template}
+          </tbody>
+        </table>
+      </div>
+      `;
+      $modal.find('.modal-body').html(template);
+    }
+    
   }else {
     template = '<p>Корзина пуста</p>';
     $modal.find('.modal-body').html(template);
@@ -76,7 +100,7 @@ export const deleteItem = (id) => {
   return new Promise((resolve, reject) => {
 
       $.ajax({
-          url: 'cart/remove',
+          url: '/cart/remove',
           data: { id }
       })
           .done(function (res) {
@@ -91,12 +115,12 @@ export const deleteItem = (id) => {
   });
 }
 
-function changeCartQuantity(id, qty, index) {
+export const changeCartQuantity = (id, qty, index) => {
 
   return new Promise((resolve, reject) => {
 
       $.ajax({
-          url: 'cart/change',
+          url: '/cart/change',
           data: { id, qty }
       })
           .done(function (res) {
@@ -117,6 +141,7 @@ function changeCartQuantity(id, qty, index) {
               resolve(cart)
           })
           .fail(function (error) {
+            
               reject(error)
           });
   });

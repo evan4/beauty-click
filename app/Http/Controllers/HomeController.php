@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Models\Service;
+use App\Models\{Category, Service};
 
 class HomeController extends Controller
 {
@@ -42,11 +41,6 @@ class HomeController extends Controller
     public function service(Service $service)
     {
         return view('home.category', compact('service'));
-    }
-
-    public function order()
-    {
-        return view('home.order');
     }
 
     public function features()

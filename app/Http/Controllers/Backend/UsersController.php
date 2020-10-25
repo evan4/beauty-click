@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\{Request, Response};
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\{Permission, Role};
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\Hash;
 
@@ -180,33 +178,25 @@ class UsersController extends Controller
         
     }
 
-    public function checkEmailUniqueness()
+    public function checkEmailUniqueness(Request $request)
     {
-        $credentials = request(['email']);
-        $email = $this->sanitizeEmail($credentials['email']);
-       
-        if($email){
-            $res = User::where('email', $email)->first();
-            if($res){
-                return response()->json([
-                    'success' => true,
-                ], Response::HTTP_OK);
-            }
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()
+            ->json([
+                'success' => false,
+            ], Response::HTTP_OK);
         }
-
-        return response()->json([
-            'success' => false,
-        ], Response::HTTP_OK);
-    }
-
-    private function sanitizeEmail($email)
-    {
-        $filteredEmail = filter_var($email, FILTER_VALIDATE_EMAIL);
         
-        if ($filteredEmail) {
-            return filter_var($filteredEmail, FILTER_SANITIZE_EMAIL);
-        }
 
-        return null;
+        return response()
+            ->json([
+                'success' => true,
+            ], Response::HTTP_OK);
+        
     }
+    
 }

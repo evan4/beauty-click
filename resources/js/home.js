@@ -1,4 +1,4 @@
-import { updateCartDialog, deleteItem } from './home/cart';
+import { updateCartDialog, changeCartQuantity, deleteItem } from './home/cart';
 
 jQuery(document).ready(function ($) {
 
@@ -84,7 +84,7 @@ jQuery(document).ready(function ($) {
         const newVal = parseInt(divUpd.text(), 10)+value;
 
         if(newVal>0) {
-            changeCartQuantity(id, value, index)
+            changeCartQuantity(id, value)
             .then(data => {
                 divUpd.text(newVal);
             })
@@ -95,7 +95,7 @@ jQuery(document).ready(function ($) {
     $('#clearCart').on('click', function (e) {
         e.preventDefault();
         $.ajax({
-            url: 'cart/clear'
+            url: '/cart/clear'
         })
             .done(function (res) {
                 updateCartDialog('');

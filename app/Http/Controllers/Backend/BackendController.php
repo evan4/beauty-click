@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\{Request, Response};
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class BackendController extends Controller
 {

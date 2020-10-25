@@ -2,16 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\{Request,Response};
 use Illuminate\Support\Arr;
-use App\Models\Service;
+use App\Models\{Order, OrderService, Service, Shipping, Payment};
 
 class CartController extends Controller
 {
     public function order()
     {
-        return view('home.order');
+        $shippings = Shipping::all();
+        $payments = Payment::all();
+        
+        return view('cart.order', compact('payments', 'shippings'));
+    }
+
+    public function store(Request $request)
+    {
+        $input =  $request->all();
+
+        $validator = Validator::make($input, [
+            'address' => ['required', 'string', 'min:5', 'max:255'],
+            'phone' => ['required', 'string', 'min:9', 'max:255'],
+        ]);
+        
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+
+        $cart = $request->session()->get('cart');
+
+     /*    $order = Order::create([
+            'total' => $cart['total'],
+            'address' => $input['address'],
+            'phone' => $input['phone'],
+            'note' => $input['note'],
+            'shipping_id' => (int) $input['shipping'],
+            'payment_id' => (int) $input['payment'],
+            'user_id' => Auth::user()->id
+        ]); */
+
+        $orderServices = [];
+
+        foreach ($cart['services'] as $service) {
+            $orderServices[] = [
+                'price' => $service['price'],
+                'quantity' => $service['quantity'],
+                'service_id' => $service['id'],
+                'order_id' => 1//$order->id,
+            ];
+            
+        }
+        dd($orderServices);
+        OrderService::create([
+            'price',
+            'quantity',
+
+            'order_id' => $order->id,
+        ]); 
+
+        $table->foreignId('service_id')->constrained('services')
+                ->onDelete('cascade');
+
+            $table->foreignId('order_id')->constrained('orders')
+                ->onDelete('cascade');
+        
+
+        //return redirect()->back()->with('message', "Your comment successfully send.");
     }
 
     public function add(Request $request)
@@ -71,21 +129,69 @@ class CartController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function change(Request $request)
+    {
+        $id =  (int) $request->id;
+        $value =  (int) $request->value;
+
+        $services = $request->session()->get('cart');
+
+        $exists = Arr::exists($services['services'], $id);
+
+        if($exists){
+            $item =Arr::get($services['services'], $id);
+
+            $services['services'][$id]['quantity'] += $value;
+            $services['quantity'] += $value;
+
+            $price = $services['services'][$id]['price'] * $services['services'][$id]['quantity'];
+            
+            if($value){
+                $services['total'] += $price;
+            }else{
+                $services['total'] -= $price;
+            }
+            
+            $request->session()->put('cart', $services);
+
+            return response()->json([
+                'success' => true,
+                'service' => $request->session()->get('cart')
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'success' => false,
+            'service' => $request->session()->get('cart')
+        ], Response::HTTP_OK);
+    }
+
     public function remove(Request $request)
     {
         $id =  (int) $request->id;
-        $service_current = $request->session()->get('cart');
+        $services = $request->session()->get('cart');
 
-        $removeItem =Arr::pull($service_current['services'], $id);
+        $exists = Arr::exists($service_current['services'], $id);
 
-        $service_current['quantity'] -= $removeItem['quantity'];
-        $service_current['total'] -= $removeItem['price'] * $removeItem['quantity'];
+        if($exists){
+            $removeItem =Arr::pull($service_current['services'], $id);
 
-        $request->session()->put('cart', $service_current);
+            $services['quantity'] -= $removeItem['quantity'];
+            $servicest['total'] -= $removeItem['price'] * $removeItem['quantity'];
+    
+            $request->session()->put('cart', $services);
+    
+            return response()->json([
+                'success' => true,
+                'service' => $request->session()->get('cart')
+            ], Response::HTTP_OK);
+        }
 
         return response()->json([
+            'success' => false,
             'service' => $request->session()->get('cart')
         ], Response::HTTP_OK);
+       
     }
 
     public function clear(Request $request)
@@ -93,6 +199,7 @@ class CartController extends Controller
         $request->session()->forget('cart');
 
         return response()->json([
+            'success' => true,
             'service' => $request->session()->get('cart')
         ], Response::HTTP_OK);
     }
