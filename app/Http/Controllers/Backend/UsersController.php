@@ -109,16 +109,19 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $input = $request->toArray();
-       
+
         $validateArray = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         ];
 
         $data = [
             'name' => $input['name'],
-            'email' => $input['email']
         ];
+
+        if($input['email'] !== $user->email){
+            array_push($data, ['email' => $input['email']]);
+            array_push($validateArray, ['email' => ['required', 'string', 'email', 'max:255', 'unique:users']]);
+        }
 
         if($input['password']){
             array_push($data, ['password' => $input['password']]);
@@ -139,6 +142,8 @@ class UsersController extends Controller
         }else{
             unset($data['password']);
         }
+
+        $user->update($data);
 
        if(!$user->hasRole($input['role'])){
             $user->removeRole($user->getRoleNames()[0]);

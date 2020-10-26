@@ -30,7 +30,7 @@ Route::get('/catalog/{category}', [HomeController::class, 'category']);
 Route::get('/catalog/{category}/{{service}}', [HomeController::class, 'service']);
 
 
-Route::get('/cart/order', [CartController::class, 'order']);
+Route::middleware('auth:sanctum')->get('/cart/order', [CartController::class, 'order']);
 Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
 Route::get('/cart/thanks', [CartController::class, 'thanks']);
 Route::get('/cart/add', [CartController::class, 'add']);

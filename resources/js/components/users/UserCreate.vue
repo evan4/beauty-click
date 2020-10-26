@@ -107,7 +107,6 @@ export default {
           this.$store.dispatch( 'users/checkEmailUniqueness', this.formData.email)
           .then(
             result => {
-              console.log(result);
               if(!result){
                 this.uniqueEmail = true;
               }else{

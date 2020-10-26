@@ -19,7 +19,8 @@ Vue.http.options.root = "/api/backend/";
 
 fetch("/api/backend/login", {  
   method: 'post',  
-  headers: {  
+  headers: {
+    "ccept": "application/json",
     "Content-type": "application/json"  
   },  
   body: JSON.stringify({email: Vue.prototype.$userEmail})

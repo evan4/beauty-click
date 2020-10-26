@@ -116,7 +116,8 @@ const users = {
         .then(response => {
           resolve(response.success)
         }, response => {
-          reject()
+          console.log(response);
+          reject(response)
         });
       })
     },
