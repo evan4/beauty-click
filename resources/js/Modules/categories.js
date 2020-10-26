@@ -2,45 +2,45 @@
 import Vue from 'vue'
 import router from '../router';
 
-const users = {
+const categories = {
   namespaced: true,
   state: {
-    users: [],
-    usersCount: 0,
+    categories: [],
+    categoriesCount: 0,
     limit: 10,
     offset: 1,
   },
   getters: {
-    users(state) {
+    categories(state) {
 
-      return state.users;
+      return state.categories;
 
     },
-    usersCount(state) {
-      return state.usersCount;
+    categoriesCount(state) {
+      return state.categoriesCount;
     },
     perPage(state) {
       return state.limit;
     },
-    currentuser: state => id => {
-      return state.users.find(user => user.id === id);
+    currentCategory: state => id => {
+      return state.categories.find(category => category.id === id);
     }
   },
   mutations: {
-    getUsers(state, payload) {
-      const {users} = payload;
+    getCategories(state, payload) {
+      const {categories} = payload;
 
-      state.users = users.data;
-      state.usersCount = +users.total;
+      state.categories = categories.data;
+      state.categoriesCount = +categories.total;
 
     },
   },
   actions: {
     // получение списка пользователей
-    getUsers({ commit, state }, payload) {
+    getCategories({ commit, state }, payload) {
       let {page, sortDesc, sortBy} = payload;
 
-      Vue.http.get(`users`, {
+      Vue.http.get('categories', {
         cache: false,
         params: {
           page,
@@ -53,7 +53,7 @@ const users = {
         })
         .then(response => {
           console.log(response);
-          commit('getUsers', response);
+          commit('getCategories', response);
         }, response => {
           dispatch('openAlert',{
             alertType : 'danger',
@@ -61,12 +61,12 @@ const users = {
           }, { root: true })
         });
     },
-    createUser({ dispatch, commit, state }, payload) {
-        const {name, email, password, role} = payload;
-        
-         Vue.http.post('users', { 
-          name, email, password, role
-        })
+    createCategory({ dispatch, commit, state }, payload) {
+        const {title, description } = payload;
+
+         Vue.http.post('categories', { 
+          title, description
+         })
           .then((response) => {
             return response.json();
           })
@@ -74,9 +74,9 @@ const users = {
             console.log(response);
             dispatch('openAlert',{
               alertType : 'success',
-              alertMsg : 'Пользователь успешно создан'
+              alertMsg : 'Категория успешно создана'
             }, { root: true })
-            router.push( '/dashboard/users' );
+            router.push( '/dashboard/categories' );
           }, response => {
             dispatch('openAlert',{
               alertType : 'danger',
@@ -84,12 +84,11 @@ const users = {
             }, { root: true })
           });
     },
-    updateUser({ dispatch, commit, state }, payload) {
-      const {id, name, email, password, role} = payload;
-      
-       Vue.http.patch(`users/${id}`, { 
-        name, email, password, role
-      })
+    updateСategorн({ dispatch, commit, state }, payload) {
+      const {title, description} = payload;
+       Vue.http.patch(`categories/${id}`, { 
+        title, description
+       })
         .then((response) => {
           return response.json();
         })
@@ -97,9 +96,9 @@ const users = {
           console.log(response);
           dispatch('openAlert',{
             alertType : 'success',
-            alertMsg : 'Данные пользователя успешно обновлены'
+            alertMsg : 'Данные успешно обновлены'
           }, { root: true })
-          router.push( '/dashboard/users' );
+          router.push( '/dashboard/categories' );
         }, response => {
           dispatch('openAlert',{
             alertType : 'danger',
@@ -107,26 +106,12 @@ const users = {
           }, { root: true })
         });
     },
-    checkEmailUniqueness({ commit, state }, payload) {
+    deleteCategory({ dispatch, commit, state }, payload) {
       return new Promise((resolve, reject) => {
-        Vue.http.post('users/checkEmailUniqueness', {email: payload})
-        .then((response) => {
-          return response.json();
-        })
-        .then(response => {
-          resolve(response.success)
-        }, response => {
-          console.log(response);
-          reject(response)
-        });
-      })
-    },
-    deleteUser({ dispatch, commit, state }, payload) {
-      return new Promise((resolve, reject) => {
-        const userId = !Number.isNaN(Number(payload)) ? +payload : null;
+        const categoryId = !Number.isNaN(Number(payload)) ? +payload : null;
 
-        if (userId) {
-          Vue.http.delete(`users/${userId}`)
+        if (categoryId) {
+          Vue.http.delete(`categories/${categoryId}`)
             .then((response) => {
               return response.json();
             })
@@ -134,7 +119,7 @@ const users = {
               if(response.success){
                 dispatch( 'openAlert', {
                   alertType : 'success',
-                  alertMsg : 'Пользователь успешно удален'
+                  alertMsg : 'Категория успешно удалена'
                 }, { root: true });
                 resolve(response.success)
               }else{
@@ -158,4 +143,4 @@ const users = {
   },
 };
 
-export default users;
+export default categories;

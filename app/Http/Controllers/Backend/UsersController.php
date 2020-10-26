@@ -84,22 +84,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        $user->getRoleNames()[0];
-        
-        return response()->json([
-            'success' => true,
-            'users' => $user
-        ], Response::HTTP_OK);
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -150,21 +134,16 @@ class UsersController extends Controller
             $user->assignRole($input['role']);
        }
        
-        if($user){
-            return response()->json([
-                'success' => true,
-            ], Response::HTTP_OK);
-        }
-
         return response()->json([
-            'success' => false,
+            'success' => true,
         ], Response::HTTP_OK);
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user)
@@ -196,7 +175,6 @@ class UsersController extends Controller
             ], Response::HTTP_OK);
         }
         
-
         return response()
             ->json([
                 'success' => true,

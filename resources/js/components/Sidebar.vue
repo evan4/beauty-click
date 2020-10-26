@@ -29,12 +29,20 @@
     <!-- Heading -->
     <div class="sidebar-heading">Interface</div>
 
-     <li v-if="this.$role = 'super-admin'"  class="nav-item">
+     <li v-if="this.$role = 'super-admin'" class="nav-item">
        <router-link class="nav-link" to="/dashboard/users">
         <i class="fas fa-users"></i>
         <span>Пользователи</span>
       </router-link>
     </li>
+    
+  <li v-if="this.$role = 'super-admin'" class="nav-item">
+       <router-link class="nav-link" to="/dashboard/categories">
+        <i class="fas fa-users"></i>
+        <span>Категории</span>
+      </router-link>
+    </li>
+
 
 
     <!-- Divider -->

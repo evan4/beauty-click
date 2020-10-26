@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Backend\BackendController;
-use App\Http\Controllers\Backend\UsersController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\Backend\{
+  BackendController, UsersController, CategoriesController
+};
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,9 +32,25 @@ Route::middleware(['auth:api', 'role:super-admin'])->prefix('backend')->group(fu
 
   Route::get('users', [UsersController::class, 'index']);
   Route::post('users', [UsersController::class, 'store']);
-  Route::get('users/{user}', [UsersController::class, 'show']);
   Route::patch('users/{user}', [UsersController::class, 'update']);
   Route::delete('users/{user}', [UsersController::class, 'destroy']);
+
+  Route::get('categories', [CategoriesController::class, 'index']);
+  Route::post('categories', [CategoriesController::class, 'store']);
+  Route::patch('categories/{category}', [CategoriesController::class, 'update']);
+  Route::delete('categories/{category}', [CategoriesController::class, 'destroy']);
+
+
+
+});
+
+Route::middleware(['auth:api', 'role:продавец'])->prefix('backend')->group(function () {
+
+
+
+});
+
+Route::middleware(['auth:api', 'role:клиент'])->prefix('backend')->group(function () {
 
 
 
