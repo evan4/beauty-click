@@ -30,46 +30,38 @@ class CartController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-
         $cart = $request->session()->get('cart');
 
-     /*    $order = Order::create([
+        $order = Order::create([
             'total' => $cart['total'],
             'address' => $input['address'],
             'phone' => $input['phone'],
             'note' => $input['note'],
             'shipping_id' => (int) $input['shipping'],
             'payment_id' => (int) $input['payment'],
-            'user_id' => Auth::user()->id
-        ]); */
+            'user_id' => auth()->user()->id
+        ]);
 
         $orderServices = [];
 
         foreach ($cart['services'] as $service) {
-            $orderServices[] = [
+            OrderService::create([
                 'price' => $service['price'],
                 'quantity' => $service['quantity'],
                 'service_id' => $service['id'],
-                'order_id' => 1//$order->id,
-            ];
-            
+                'order_id' => $order->id,
+            ]); 
         }
-        dd($orderServices);
-        OrderService::create([
-            'price',
-            'quantity',
 
-            'order_id' => $order->id,
-        ]); 
+        $request->session()->forget('cart');
 
-        $table->foreignId('service_id')->constrained('services')
-                ->onDelete('cascade');
+        return redirect('cart/thanks')
+            ->with('status', "Ваш заказ поступил на обработку.");
+    }
 
-            $table->foreignId('order_id')->constrained('orders')
-                ->onDelete('cascade');
-        
-
-        //return redirect()->back()->with('message', "Your comment successfully send.");
+    public function thanks()
+    {
+        return view('cart.thanks');
     }
 
     public function add(Request $request)
@@ -133,25 +125,23 @@ class CartController extends Controller
     {
         $id =  (int) $request->id;
         $value =  (int) $request->value;
-
+        
         $services = $request->session()->get('cart');
 
         $exists = Arr::exists($services['services'], $id);
 
         if($exists){
-            $item =Arr::get($services['services'], $id);
+            $item = Arr::get($services['services'], $id);
 
             $services['services'][$id]['quantity'] += $value;
             $services['quantity'] += $value;
 
-            $price = $services['services'][$id]['price'] * $services['services'][$id]['quantity'];
-            
-            if($value){
-                $services['total'] += $price;
-            }else{
-                $services['total'] -= $price;
+            $total = 0;
+            foreach ($services['services'] as $service) {
+                $total += $service['price'] * $service['quantity'];
             }
-            
+            $services['total'] = $total;
+
             $request->session()->put('cart', $services);
 
             return response()->json([
@@ -171,13 +161,13 @@ class CartController extends Controller
         $id =  (int) $request->id;
         $services = $request->session()->get('cart');
 
-        $exists = Arr::exists($service_current['services'], $id);
+        $exists = Arr::exists($services['services'], $id);
 
         if($exists){
-            $removeItem =Arr::pull($service_current['services'], $id);
+            $removeItem = Arr::pull($services['services'], $id);
 
             $services['quantity'] -= $removeItem['quantity'];
-            $servicest['total'] -= $removeItem['price'] * $removeItem['quantity'];
+            $services['total'] -= $removeItem['price'] * $removeItem['quantity'];
     
             $request->session()->put('cart', $services);
     
@@ -203,4 +193,5 @@ class CartController extends Controller
             'service' => $request->session()->get('cart')
         ], Response::HTTP_OK);
     }
+
 }

@@ -1,4 +1,4 @@
-import { updateCartDialog, changeCartQuantity, deleteItem } from './home/cart';
+import { updateCartDialog, changeCartQuantity, removeUtemFromTable, deleteItem } from './home/cart';
 
 jQuery(document).ready(function ($) {
 
@@ -54,17 +54,20 @@ jQuery(document).ready(function ($) {
 
     $('.removeItem').on('click', function(e){
         e.preventDefault();
-
+        
         const $tr = $(this).closest("tr");
-        const id = +$tr.data('id');
+        
+        const id = +$(this).data('id');
         const index = $tr.index();
+        console.log(id);
 
         if(id > 0) {
             $('.overlay').fadeIn();
 
             deleteItem(id)
             .then(res => {
-                removeUtemFromTable(res, index);
+                
+                removeUtemFromTable(res.service, index);
             })
             .catch(error => {
                 console.log(error)
@@ -75,18 +78,20 @@ jQuery(document).ready(function ($) {
 
     $('.value-plus, .value-minus').on('click', function(){
         const $tr = $(this).closest("tr");
-        const index = $tr.index();
+        
+        const index = +$tr.index();
+        
         const id = +$tr.data('id');
-        const divUpd = $(this).parent().find('.value');
+        const curent_price = $(this).siblings('.value');
         
         const value = $(this).hasClass('value-plus') ? 1 : -1;
-
-        const newVal = parseInt(divUpd.text(), 10)+value;
-
+        
+        const newVal = +curent_price.text() + value;
+        
         if(newVal>0) {
-            changeCartQuantity(id, value)
+            changeCartQuantity(id, value, index)
             .then(data => {
-                divUpd.text(newVal);
+                curent_price.text(newVal);
             })
         }
         

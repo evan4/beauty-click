@@ -1,12 +1,12 @@
 @extends('layouts.home')
 
 @section('content')
-<div class="container">
+<div class="order">
+    @php
+    $cart = session('cart');
+    @endphp
+    @if(isset($cart) && !empty($cart['services']))
     <div class="row">
-      @php
-      $cart = session('cart');
-      @endphp
-      @if(isset($cart))
       <div class="col-sm">
           <h4>Оформление заказа</h4>
           <div class="cart-table">
@@ -14,7 +14,7 @@
                 <i class="fas fa-spinner fa-spin" style="font-size: 48px;"></i>
               </div>
               <div class="table-responsive">
-                <table class="table">
+                <table class="table total-list">
                     <thead>
                         <tr>
                             <th>Фото</th>
@@ -26,7 +26,7 @@
                     </thead>
                 <tbody>
                 @foreach ($cart['services'] as $id => $item)
-                <tr data-id="{{$loop->index}}">
+                <tr data-id="{{$item['id']}}">
                     <td class="invert-image">
                         <a href="/category/{{$item['category']}}/{{$item['slug']}}">
                             <img src="/images/{{$item['img'] ?? 'no_image.png' }}" 
@@ -40,14 +40,14 @@
                                 <button type="button" class="btn btn-light entry value-minus">
                                     <i class="fas fa-minus" style="font-size: 20px;"></i>
                                 </button>
-                                <button type="button" class="btn btn-light entry value"><span>{{$item['quantity']}}</span</button>
+                                <button type="button" class="btn btn-light entry value"><span>{{$item['quantity']}}</span></button>
                                 <button type="button" class="btn btn-light entry value-plus active">
                                     <i class="fas fa-plus" style="font-size: 20px;"></i>
                                 </button>
                             </div>
                         </div>
                     </td>
-                    <td>{{$item['price']}}</td>
+                    <td class="item-price">{{$item['price']}}</td>
                     <td>
                         <a href="#" data-id="{{$item['id']}}" class="removeItem">
                             <i class="fas fa-trash-alt text-danger"></i>
@@ -124,11 +124,11 @@
                 <table class="table">
                     <tr>
                         <td colspan="4">Итого: </td>
-                        <td id="cart-qty">{{$cart['quantity']}}</td>
+                        <td id="cart-quantity">{{$cart['quantity']}}</td>
                     </tr>
                     <tr>
                         <td colspan="4">На сумму: </td>
-                        <td id="cart-sum">{{$cart['total']}}</td>
+                        <td id="cart-total">{{$cart['total']}}</td>
                     </tr>
                 </table>
                
@@ -137,9 +137,10 @@
         </div>
         </form>
       
-      @else
-          <h3>Корзина пуста</h3>
-      @endif
+      
     </div>
+    @else
+        <h3>Корзина пуста</h3>
+    @endif
 </div>
 @endsection

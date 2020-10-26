@@ -70,7 +70,7 @@
             </button>
             </div>
             <div class="modal-body">
-                @if(isset($cart))
+                @if(isset($cart) && !empty($cart['services']))
                 
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">

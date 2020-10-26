@@ -1,40 +1,35 @@
-export const removeUtemFromTable = (res, index) => {
+export const removeUtemFromTable = (cart, index) => {
 
-  const { cart, cartTemplate } = res;
-  
-  if (cart['cart-sum'] > 0) {
-      const $list = $('.total-list');
+  const { total, quantity } = cart;
 
-      $('.timetable_sub tbody tr').eq(index)
-          .fadeOut('slow').remove();
+  if (total > 0) {
 
-      $list.find('li')
-          .last().find('span').text(cart['cart-sum']);
+    $('.total-list tbody tr').eq(index)
+      .fadeOut('slow').remove();
 
-      $list.find('li').eq(index)
-          .fadeOut('slow').remove()
+    $('#cart-total').text(total);
+    $('#cart-quantity').text(quantity);
 
-      $('.overlay').fadeOut();
+    $('.overlay').fadeOut();
   } else {
-      $('.checkout-right').fadeOut();
-      $('.checkout-left').fadeOut();
-      $('.privacy.about').append(cartTemplate)
+
+    $('.order').html('<p>Корзина пуста</p>');
   }
 }
 
 export const updateCartDialog = (cart) => {
-  const {services, total, quantity} = cart;
+  const { services, total, quantity } = cart;
 
   const $modal = $('#cart');
   let template = '';
 
-  if(services){
-    const body = Object.keys(services).map(function(key){
-        return [
-          `
+  if (services && Object.keys(services).length > 0) {
+    const body = Object.keys(services).map(function (key) {
+      return [
+        `
             <tr>
               <td>
-                  <img src="/images/${services[key]['img'] ? services[key]['img'] : 'no_image.png' }" 
+                  <img src="/images/${services[key]['img'] ? services[key]['img'] : 'no_image.png'}" 
                   alt="${services[key]['title']}" height="50">
               </td>
               <td>${services[key]['title']}</td>
@@ -46,7 +41,7 @@ export const updateCartDialog = (cart) => {
                   </a>
               </td>
             </tr>`
-        ]
+      ]
     });
 
     template = `
@@ -60,10 +55,10 @@ export const updateCartDialog = (cart) => {
             <td id="cart-sum">${total}</td>
           </tr>
     `;
-    
-    if($modal.find('.modal-body tbody').length){
+
+    if ($modal.find('.modal-body tbody').length) {
       $modal.find('.modal-body tbody').html(template);
-    }else{
+    } else {
       template = `
       <div class="table-responsive">
        <table class="table table-hover table-striped">
@@ -84,13 +79,13 @@ export const updateCartDialog = (cart) => {
       `;
       $modal.find('.modal-body').html(template);
     }
-    
-  }else {
+
+  } else {
+
     template = '<p>Корзина пуста</p>';
     $modal.find('.modal-body').html(template);
   }
 
-  const $sum = $('#cart-sum').text();
   const $cartSum = total ? total : '$0';
 
   $('.cart-sum').text($cartSum);
@@ -99,50 +94,48 @@ export const updateCartDialog = (cart) => {
 export const deleteItem = (id) => {
   return new Promise((resolve, reject) => {
 
-      $.ajax({
-          url: '/cart/remove',
-          data: { id }
-      })
-          .done(function (res) {
-              if (!res) alert('Произошла ошибка. Попробуйте еще раз');
+    $.ajax({
+      url: '/cart/remove',
+      data: { id }
+    })
+      .done(function (res) {
+        if (!res) alert('Произошла ошибка. Попробуйте еще раз');
 
-              updateCartDialog(res.service);
-              resolve(res)
-          })
-          .fail(function (error) {
-              reject(error)
-          });
+        updateCartDialog(res.service);
+        resolve(res)
+      })
+      .fail(function (error) {
+        reject(error)
+      });
   });
 }
 
-export const changeCartQuantity = (id, qty, index) => {
+export const changeCartQuantity = (id, value, index) => {
 
   return new Promise((resolve, reject) => {
 
-      $.ajax({
-          url: '/cart/change',
-          data: { id, qty }
+    $.ajax({
+      url: '/cart/change',
+      data: { id, value }
+    })
+      .done((res) => {
+        if (!res) alert('Произошла ошибка. Попробуйте еще раз');
+        
+        const { services, quantity, total } = res.service;
+       
+        const sum = +services[id].price * +services[id].quantity;
+        
+        $('.total-list tbody tr').eq(index).find('.item-price').text(`${sum}`)
+        $('#cart-total').text(total);
+        $('#cart-quantity').text(quantity);
+
+        updateCartDialog(res.service);
+
+        resolve(cart)
       })
-          .done(function (res) {
-              if (!res) alert('Произошла ошибка. Попробуйте еще раз');
+      .fail(function (error) {
 
-              const { cart, cartTemplate, product } = res;
-
-              const sum = product.price * product.qty;
-              const $list = $('.total-list');
-              $list.find('li').eq(index).find('span').text(`$${sum}`)
-
-              // total sum
-              $list.find('li')
-                  .last().find('span').text(`$${cart['cart-sum']}`);
-
-              updateCartDialog(cartTemplate);
-
-              resolve(cart)
-          })
-          .fail(function (error) {
-            
-              reject(error)
-          });
+        reject(error)
+      });
   });
 }

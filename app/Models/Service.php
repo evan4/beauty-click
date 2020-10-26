@@ -18,6 +18,8 @@ class Service extends Model
         'title',
         'description',
         'parent_id',
+        'category_id',
+        'user_id'
     ];
 
     /**

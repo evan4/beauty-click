@@ -16,7 +16,9 @@ class OrderService extends Model
      */
     protected $fillable = [
         'price',
-        'quantity'
+        'quantity',
+        'service_id',
+        'order_id'
     ];
 
     /**
